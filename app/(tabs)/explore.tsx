@@ -1,10 +1,5 @@
-import { Box } from "@/components/ui/box";
-import { Text } from "@/components/ui/text";
+import Explore from "@/components/screens/explore/Explore";
 
 export default function ExploreScreen() {
-  return (
-    <Box>
-      <Text>Explore</Text>
-    </Box>
-  );
+  return <Explore />;
 }

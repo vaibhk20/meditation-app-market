@@ -29,7 +29,7 @@ export default function RootLayout() {
   }
 
   return (
-    <GluestackUIProvider mode={colorScheme === "dark" ? "dark" : "light"}>
+    <GluestackUIProvider mode="dark">
       <SafeAreaView className="flex-1">
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
