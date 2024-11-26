@@ -1,13 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box } from "@/components/ui/box";
 import {
   GestureDetector,
   GestureHandlerRootView,
   Gesture,
-  Directions,
 } from "react-native-gesture-handler";
 import Animated, {
-    clamp,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -15,6 +13,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 const MusicScreen = () => {
+  
   const data = [
     {
       id: 1,
@@ -92,56 +91,68 @@ const MusicScreen = () => {
       row: 3,
     },
   ];
-  const translateX = useSharedValue(0);
-  const startTranslateX = useSharedValue(0);
-  const translateY = useSharedValue(0);
-  const startTranslateY = useSharedValue(0);
-  const fling = Gesture.Fling()
-    .direction(Directions.LEFT | Directions.RIGHT | Directions.UP | Directions.DOWN)
-    .onBegin((event) => {
-      startTranslateX.value = event.x;
-      startTranslateY.value = event.y;
+  const SWIPE_THRESHOLD = 120;
+  const x = useSharedValue(0);
+  const y = useSharedValue(0);
+  const prevX = useSharedValue(0);
+  const prevY = useSharedValue(0);
+  
+  const drag = Gesture.Pan()
+    .onStart(() => {
+      prevX.value = x.value;
+      prevY.value = y.value;
+     
     })
-    .onStart((event) => {
-      translateX.value = withTiming(
-        clamp(
-          translateX.value + event.x - startTranslateX.value,
+    .onUpdate((e) => {
+        // Update the horizontal position based on drag
+        if (e.translationX < -SWIPE_THRESHOLD ) {
+          x.value = withSpring(prevX.value - 280); // Scroll left
+         
+        } else if (e.translationX > SWIPE_THRESHOLD ) {
+          x.value = withSpring(prevX.value + 280); // Scroll right
+         
+        } else {
+          x.value = withSpring(prevX.value);
+        }
+  
+        // Update the vertical position based on drag
+        if (e.translationY < -SWIPE_THRESHOLD) {
+          y.value = withSpring(prevY.value - 280); // Scroll up
+         
+        } else if (e.translationY > SWIPE_THRESHOLD ) {
+          y.value = withSpring(prevY.value + 280); // Scroll down
           
-       -1400,
-       1400
-        ),
-        { duration: 200 }
-      );
-      translateY.value = withTiming(
-        clamp(
-          translateY.value + event.y - startTranslateY.value,
-          
-       -1400,
-       1400
-        ),
-        { duration: 200 }
-      );
-    })
-    .runOnJS(true);
+        } else {
+          y.value = withSpring(prevY.value);
+        }
+      });
+  
+    // Animated style for the grid container
 
-  const boxAnimatedStyles = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }],
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{ translateX: x.value }, { translateY: y.value }],
   }));
 
   return (
     <GestureHandlerRootView>
       <Box className="flex-1 bg-background-0">
-        <GestureDetector gesture={fling}>
+        <GestureDetector gesture={drag}>
           <Animated.View
-            style={boxAnimatedStyles}
+            style={animatedStyles}
             className="flex-row w-[1480px] gap-4 flex-wrap bg-red-500"
           >
-            {data.map((item) => (
-              <Animated.View
-                key={item.id}
-                className="w-[280px] h-[280px] bg-blue-500"
-              ></Animated.View>
-            ))}
+            {data.map((item) => {
+              
+         
+
+              return (
+                <Animated.View
+                  key={item.id}
+                  className="w-[280px] h-[280px] bg-blue-500"
+                
+                ></Animated.View>
+              );
+            })}
           </Animated.View>
         </GestureDetector>
       </Box>
