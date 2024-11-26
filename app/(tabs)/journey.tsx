@@ -1,10 +1,10 @@
 import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
 
-export default function ExploreScreen() {
+export default function JourneyScreen() {
   return (
     <Box>
-      <Text>Explore</Text>
+      <Text>Journey</Text>
     </Box>
   );
 }
