@@ -1,19 +1,26 @@
 import React, { useState } from "react";
 import { Box } from "@/components/ui/box";
+import { useWindowDimensions } from "react-native";
 import {
   GestureDetector,
   GestureHandlerRootView,
   Gesture,
 } from "react-native-gesture-handler";
 import Animated, {
+  Extrapolate,
+  interpolate,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import MusicCard from "@/components/cards/MusicCard";
 const MusicScreen = () => {
-  
+  const { width: width, height: height } = useWindowDimensions();
+  const paddingTop = height / 2 - 391 / 2;
+  const paddingLeft = width / 2 - 280 / 2;
+
   const data = [
     {
       id: 1,
@@ -96,38 +103,47 @@ const MusicScreen = () => {
   const y = useSharedValue(0);
   const prevX = useSharedValue(0);
   const prevY = useSharedValue(0);
-  
+  const [col, setCol] = useState(3);
+  const [row, setRow] = useState(2);
   const drag = Gesture.Pan()
     .onStart(() => {
       prevX.value = x.value;
       prevY.value = y.value;
-     
     })
     .onUpdate((e) => {
-        // Update the horizontal position based on drag
-        if (e.translationX < -SWIPE_THRESHOLD ) {
-          x.value = withSpring(prevX.value - 280); // Scroll left
-         
-        } else if (e.translationX > SWIPE_THRESHOLD ) {
-          x.value = withSpring(prevX.value + 280); // Scroll right
-         
-        } else {
-          x.value = withSpring(prevX.value);
-        }
-  
-        // Update the vertical position based on drag
-        if (e.translationY < -SWIPE_THRESHOLD) {
-          y.value = withSpring(prevY.value - 280); // Scroll up
-         
-        } else if (e.translationY > SWIPE_THRESHOLD ) {
-          y.value = withSpring(prevY.value + 280); // Scroll down
-          
-        } else {
-          y.value = withSpring(prevY.value);
-        }
-      });
-  
-    // Animated style for the grid container
+      // Update the horizontal position based on drag
+      if (e.translationX < -SWIPE_THRESHOLD && col < 5) {
+        x.value = withTiming(prevX.value - 280 - 8, { duration: 300 }); // Scroll left
+      } else if (e.translationX > SWIPE_THRESHOLD && col > 1) {
+        x.value = withTiming(prevX.value + 280 + 8, { duration: 300 }); // Scroll right
+      } else {
+        x.value = withTiming(prevX.value, { duration: 300 });
+      }
+
+      // Update the vertical position based on drag
+      if (e.translationY < -SWIPE_THRESHOLD && row < 3) {
+        y.value = withTiming(prevY.value - 391 - 8, { duration: 300 }); // Scroll up
+      } else if (e.translationY > SWIPE_THRESHOLD && row > 1) {
+        y.value = withTiming(prevY.value + 391 + 8, { duration: 300 }); // Scroll down
+      } else {
+        y.value = withTiming(prevY.value, { duration: 300 });
+      }
+    })
+    .onEnd(() => {
+      if (prevX.value > x.value) {
+        runOnJS(setCol)(col + 1);
+      } else if (prevX.value < x.value) {
+        runOnJS(setCol)(col - 1);
+      }
+
+      if (prevY.value > y.value) {
+        runOnJS(setRow)(row + 1);
+      } else if (prevY.value < y.value) {
+        runOnJS(setRow)(row - 1);
+      }
+    });
+
+  // Animated style for the grid container
 
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{ translateX: x.value }, { translateY: y.value }],
@@ -135,22 +151,37 @@ const MusicScreen = () => {
 
   return (
     <GestureHandlerRootView>
-      <Box className="flex-1 bg-background-0">
+      <Box className="flex-1 bg-[#13171C] items-center justify-center">
         <GestureDetector gesture={drag}>
           <Animated.View
-            style={animatedStyles}
-            className="flex-row w-[1480px] gap-4 flex-wrap bg-red-500"
+            style={[
+              animatedStyles,
+              //   { marginTop: paddingTop, marginLeft: paddingLeft },
+            ]}
+            className="flex-row w-[1480px] gap-4 flex-wrap bg-background-[#13171C]"
           >
             {data.map((item) => {
-              
-         
+              const animatedItemStyle = useAnimatedStyle(() => {
+                return {
+                  opacity: withTiming(
+                    item.col === col && item.row === row ? 1 : 0.2,
+                    { duration: 300 }
+                  ),
+                };
+              });
 
               return (
                 <Animated.View
                   key={item.id}
-                  className="w-[280px] h-[280px] bg-blue-500"
-                
-                ></Animated.View>
+                  className="w-[280px] h-[391px] "
+                  style={animatedItemStyle}
+                >
+                  <MusicCard
+                    title="Waterfall"
+                    description="Gentle cascades for serene moments"
+                    image={require("@/assets/images/splach.png")}
+                  />
+                </Animated.View>
               );
             })}
           </Animated.View>

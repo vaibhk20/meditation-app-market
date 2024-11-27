@@ -1,10 +1,8 @@
 import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
-
-export default function MusicScreen() {
+import MusicScreen from "@/components/screens/music/MusicScreen";
+export default function Music() {
   return (
-    <Box>
-      <Text>Music</Text>
-    </Box>
+    <MusicScreen />
   );
 }
