@@ -1,5 +1,4 @@
-import ScreenLayout from "@/components/layout/ScreenLayout";
-import HomeScreen from "@/components/screens/home/HomeScreen";
+import HomeScreen from "@/components/screens/home";
 
 export default function Home() {
   return <HomeScreen />;

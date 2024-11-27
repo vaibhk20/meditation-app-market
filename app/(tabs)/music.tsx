@@ -1,13 +1,5 @@
-import ScreenLayout from "@/components/layout/ScreenLayout";
-import { Box } from "@/components/ui/box";
-import { Text } from "@/components/ui/text";
+import MusicScreen from "@/components/screens/music";
 
-export default function MusicScreen() {
-  return (
-    <ScreenLayout>
-      <Box>
-        <Text>Music</Text>
-      </Box>
-    </ScreenLayout>
-  );
+export default function Music() {
+  return <MusicScreen />;
 }
