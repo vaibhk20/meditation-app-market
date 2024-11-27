@@ -7,7 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-// import "react-native-reanimated";
+import "react-native-reanimated";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -29,13 +29,12 @@ export default function RootLayout() {
   }
 
   return (
-    <GluestackUIProvider mode={colorScheme === "dark" ? "dark" : "light"}>
-      <SafeAreaView className="flex-1">
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </SafeAreaView>
+    <GluestackUIProvider mode="dark">
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+      <StatusBar style="dark" />
     </GluestackUIProvider>
   );
 }

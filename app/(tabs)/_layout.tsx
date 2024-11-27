@@ -1,32 +1,44 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { CustomTabBar } from "@/components/CustomTabBar";
+import { CustomTabBar } from "@/components/layout/CustomTabBar";
+import {
+  HomeIcon,
+  ExploreIcon,
+  MusicIcon,
+  JourneyIcon,
+  StatsIcon,
+} from "@/components/layout/CustomTabBar/icons";
 
 const tabItems = [
-  { name: "home", label: "Home", icon: "home-outline", activeIcon: "home" },
+  {
+    name: "home",
+    label: "Home",
+    path: "/",
+    icon: HomeIcon,
+  },
   {
     name: "explore",
     label: "Explore",
-    icon: "search-outline",
-    activeIcon: "search",
+    path: "/explore",
+    icon: ExploreIcon,
   },
   {
     name: "music",
     label: "Music",
-    icon: "add-circle-outline",
-    activeIcon: "add-circle",
+    path: "/music",
+    icon: MusicIcon,
   },
   {
     name: "journey",
     label: "Journey",
-    icon: "book-outline",
-    activeIcon: "book",
+    path: "/journey",
+    icon: JourneyIcon,
   },
   {
     name: "stats",
     label: "Stats",
-    icon: "pie-chart-outline",
-    activeIcon: "pie-chart",
+    path: "/stats",
+    icon: StatsIcon,
   },
 ];
 
@@ -39,9 +51,9 @@ export default function TabLayout() {
       tabBar={(props) => <CustomTabBar tabItems={tabItems} />}
     >
       <Tabs.Screen
-        name="home"
+        name="index"
         options={{
-          title: "Home",
+          title: "/",
         }}
       />
       <Tabs.Screen
@@ -60,7 +72,6 @@ export default function TabLayout() {
         name="journey"
         options={{
           title: "Journey",
-          // tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
