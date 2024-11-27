@@ -1,13 +1,5 @@
-import ScreenLayout from "@/components/layout/ScreenLayout";
-import { Box } from "@/components/ui/box";
-import { Text } from "@/components/ui/text";
+import Explore from "@/components/screens/explore/Explore";
 
 export default function ExploreScreen() {
-  return (
-    <ScreenLayout>
-      <Box>
-        <Text>Explore</Text>
-      </Box>
-    </ScreenLayout>
-  );
+  return <Explore />;
 }
